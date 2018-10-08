@@ -9,7 +9,7 @@ PACKER_BOX_VERSION=$1
 
 git clone https://github.com/chef/bento.git 2>/dev/null || echo 'bento/bento dir exists - moving on ...'
 
-packer_options=' --on-error=abort '
+packer_options=' --on-error=abort -only=virtualbox-iso'
 
 #packer_vars=" -var name=homestead-co7 -var memory=2048 -var disk_size=105000 -var cpus=2 -var box_basename=homestead-co7 -var version=$PACKER_BOX_VERSION "
 packer_vars=" -var name=homestead-co7 -var memory=2048 -var disk_size=105000 -var cpus=2 -var version=$PACKER_BOX_VERSION "

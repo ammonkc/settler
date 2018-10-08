@@ -1,5 +1,6 @@
 {
   "_comment": "Build with `packer build -var-file=entropy-7.5.json entropy.json`",
+  "headless": "true",
   "iso_checksum": "714acc0aefb32b7d51b515e25546835e55a90da9fb00417fbee2d03a62801efd",
   "iso_checksum_type": "sha256",
   "iso_name": "CentOS-7-x86_64-Minimal-1804.iso",
