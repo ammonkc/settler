@@ -16,7 +16,6 @@ packer_vars=" -var name=homestead-co7 -var memory=2048 -var disk_size=105000 -va
 
 rm -f scripts/homestead.sh &> /dev/null
 cp -rf scripts/provision.sh bento/centos/scripts/homestead.sh
-cp -rf entropy-7.5.json bento/centos/entropy-7.5.json
 
 pushd bento/centos
 # Add `scripts/homestead.sh` to `provisioners.scripts` after `"scripts/hyperv.sh",` in file `centos/centos-7.5-x86_64.json`
@@ -47,10 +46,10 @@ grep 'PACKER_BOX_VERSION=' scripts/homestead.sh &> /dev/null || (
     ex -sc "${lineno}i|PACKER_BOX_VERSION=${PACKER_BOX_VERSION=}" -cx scripts/homestead.sh )
 
 
-echo packer build ${packer_options} ${packer_vars} -var-file=entropy-7.5.json centos-7.5-x86_64.json
+echo packer build ${packer_options} ${packer_vars} -var-file=../../entropy-7.5.json centos-7.5-x86_64.json
 
-packer validate ${packer_vars} -var-file=entropy-7.5.json centos-7.5-x86_64.json &&
-packer build ${packer_options} ${packer_vars} -var-file=entropy-7.5.json centos-7.5-x86_64.json
+packer validate ${packer_vars} -var-file=../../entropy-7.5.json centos-7.5-x86_64.json &&
+packer build ${packer_options} ${packer_vars} -var-file=../../entropy-7.5.json centos-7.5-x86_64.json
 [ -e packer_cache/*.iso ] && (ln packer_cache/*.iso ../../;echo "ISO linked to save re-download")
 popd
 
