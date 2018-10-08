@@ -136,6 +136,71 @@ YUM
 
 }
 
+install_apache() {
+    echo -e "\n${FUNCNAME[ 0 ]}()\n"
+    # https://www.stephenrlang.com/2018/02/centos-7-apache-2-4-with-php-fpm/
+    sudo su - <<'YUM'
+    systemctl stop nginx
+
+    yum install -y httpd mod_ssl
+
+    systemctl enable httpd
+    systemctl start httpd
+
+    # Disable sendfile
+    sed -i 's/#EnableSendfile off/EnableSendfile off/g' /etc/httpd/conf/httpd.conf
+    sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
+    sed -i 's/#LoadModule mpm_event_module/LoadModule mpm_event_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
+
+    # create directory for vhosts
+    mkdir -p /etc/httpd/{sites-available,sites-enabled}
+
+    cat << VHOSTS_EOF > /etc/httpd/conf.d/vhosts.conf
+    ServerName entropy.test
+    # Load vhost configs from enabled directory
+    IncludeOptional sites-enabled/*.conf
+VHOSTS_EOF
+
+    # php-fpm.conf
+    cat << PHPFPM_EOF > /etc/httpd/conf.d/php-fpm.conf
+# Add index.php to the list of files that will be served as directory indexes.
+DirectoryIndex /index.php index.php
+
+<FilesMatch \.php$>
+    # 2.4.10+ can proxy to unix socket
+    # SetHandler "proxy:unix:/var/run/php-fpm.sock|fcgi://localhost/"
+
+    # Else we can just use a tcp socket:
+    SetHandler "proxy:fcgi://127.0.0.1:9000"
+</FilesMatch>
+
+<IfModule mpm_prefork_module>
+    php_value session.save_handler "files"
+    php_value session.save_path "/var/lib/php/session"
+    php_value soap.wsdl_cache_dir  "/var/lib/php/wsdlcache"
+</IfModule>
+PHPFPM_EOF
+
+    systemctl start firewalld
+
+    firewall-cmd --permanent --zone=public --add-service=http
+    firewall-cmd --permanent --zone=public --add-service=https
+    # firewall-cmd --reload
+
+    # Server Block Configuration
+
+    # Any additional server blocks, known as Virtual Hosts in Apache, can be added by creating new configuration files in /etc/nginx/conf.d.
+    # Files that end with .conf in that directory will be loaded when Nginx is started.
+
+    # Nginx Global Configuration
+
+    # The main Nginx configuration file is located at /etc/nginx/nginx.conf.
+    # This is where you can change settings like the user that runs the Nginx daemon processes,
+    # and the number of worker processes that get spawned when Nginx is running, among other things.
+YUM
+
+}
+
 install_supervisor() {
     echo -e "\n${FUNCNAME[ 0 ]}()\n"
 
@@ -870,6 +935,11 @@ WPCLI
 }
 
 
+install_dotfiles() {
+    echo -e "\n${FUNCNAME[ 0 ]}()\n"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ammonkc/dotfiles/linux/bootstrap.sh)"
+}
+
 install_oh_my_zsh() {
     echo -e "\n${FUNCNAME[ 0 ]}()\n"
     sudo su - << MYZSH
@@ -1114,6 +1184,83 @@ rm -rf ${tmpdir}
 LUCKY
 }
 
+install_dnsmasq() {
+    echo -e "\n${FUNCNAME[ 0 ]}()\n"
+    # https://mallinson.ca/osx-web-development/
+    sudo su - <<'YUM'
+    yum install -y dnsmasq
+
+    sed -i 's|#conf-dir=/etc/dnsmasq.d|conf-dir=/etc/dnsmasq.d|' /etc/dnsmasq.conf
+
+    cat << DNSMASQ_EOF > /etc/dnsmasq.d/entropy.conf
+    domain-needed
+    bogus-priv
+    # listen on both local machine and private network
+    listen-address=127.0.0.1
+    listen-address=192.168.10.10
+    bind-interfaces
+    # read domain mapping from this file as well as /etc/hosts
+    addn-hosts=/etc/hosts.dnsmasq
+    expand-hosts
+DNSMASQ_EOF
+
+    cat << DOMAIN_EOF > /etc/dnsmasq.d/test.conf
+    domain=test
+    local=/test/
+DOMAIN_EOF
+
+    echo -e "192.168.10.10 entropy.test" > /etc/hosts.dnsmasq
+
+    systemctl enable dnsmasq.service
+    systemctl start dnsmasq.service
+
+    firewall-cmd --zone=public --permanent --add-service=dns
+    # firewall-cmd --reload
+YUM
+}
+
+install_motd() {
+    echo -e "\n${FUNCNAME[ 0 ]}()\n"
+    echo 'Welcome to your Entropy virtual machine.' > /etc/motd
+
+    # Disable static motd
+    # sed -i 's/#PrintMotd yes/PrintMotd no/g' /etc/ssh/sshd_config
+    # install motd.sh
+    cat << MOTD_EOF > /etc/profile.d/motd.sh
+    #!/bin/bash
+
+    echo -e "
+                    _
+                   | |
+          ___ _ __ | |_ _ __ ___  _ __  _   _
+         / _ \ '_ \| __| '__/ _ \| '_ \| | | |
+        |  __/ | | | |_| | | (_) | |_) | |_| |
+         \___|_| |_|\__|_|  \___/| .__/ \__, |
+                                 | |     __/ |
+                                 |_|    |___/
+
+    ################################################
+    Vagrant Box.......: ammonkc/entropy (v@@PACKER_BOX_VERSION@@)
+    hostname..........: `hostname`
+    IP Address........: `/usr/sbin/ip addr show eth1 | grep 'inet ' | cut -f2 | awk '{print $2}'`
+    OS Release........: `cat /etc/redhat-release`
+    kernel............: `uname -r`
+    User..............: `whoami`
+    Apache............: `/usr/sbin/httpd -v | grep 'Server version' | awk '{print $3}' | tr -d Apache/`
+    PHP...............: `/usr/bin/php -v | grep cli | awk '{print $2}'`
+    MySQL.............: `/usr/bin/mysql -V | awk '{print $5}' | tr -d ,`
+    PostgreSQL........: `/usr/bin/psql --version | awk '{print $3}'`
+    Wkhtmltopdf.......: `/usr/local/bin/wkhtmltopdf --version | awk '{print $2}'`
+    Configured Sites..:
+    `cat /etc/hosts.dnsmasq`
+    ################################################
+    "
+MOTD_EOF
+
+    sed -i "s/@@PACKER_BOX_VERSION@@/${PACKER_BOX_VERSION}/g" /etc/profile.d/motd.sh
+    chmod +x /etc/profile.d/motd.sh
+}
+
 finish_build_meta() {
     echo -e "\n${FUNCNAME[ 0 ]}()\n"
     [ $# -lt 1 ] && HSVER=$(date +%s) || HSVER=$1
@@ -1152,6 +1299,7 @@ yum_install
 #install_supervisor
 install_node
 install_nginx
+install_apache
 
 install_php_remi 7.0 && configure_php_remi 7.0
 install_php_remi 7.1 && configure_php_remi 7.1
@@ -1191,7 +1339,8 @@ install_mailhog
 install_ngrok
 install_flyway
 install_wp_cli
-install_oh_my_zsh
+install_dotfiles
+# install_oh_my_zsh
 install_browsershot_dependencies
 install_zend_zray # not compatible with centos7 - libssl clash
 install_golang
@@ -1200,6 +1349,9 @@ install_postfix
 install_crystal
 install_heroku_tooling
 install_lucky
+install_dnsmasq
+
+install_motd
 
 finish_build_meta ${PACKER_BOX_VERSION}
 set -u
