@@ -492,10 +492,10 @@ configure_cache_queue() {
 install_php_remi() {
 
     [ $# -lt 1 ] && {
-        echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 7.0|7.1|7.2" && return 1
+        echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 1
     };
     echo $1 | egrep '7\.[0,1,2]' || {
-        echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 7.0|7.1|7.2" && return 2
+        echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 2
     };
     echo -e "\n${FUNCNAME[ 0 ]}($@)\n";
 
@@ -561,10 +561,10 @@ install_php_remi() {
 configure_php_remi() {
 
     [ $# -lt 1 ] && {
-        echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 7.0|7.1|7.2" && return 1
+        echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 1
     };
     echo $1 | egrep '7\.[0,1,2]' || {
-        echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 7.0|7.1|7.2" && return 2
+        echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 2
     };
     echo -e "\n${FUNCNAME[ 0 ]}($@) - configure nginx php-fpm\n";
 
@@ -705,10 +705,10 @@ NGINXDIFF
 switch_php ()
 {
     [ $# -lt 1 ] && {
-        echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 7.0|7.1|7.2" && return 1
+        echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 1
     };
     echo $1 | egrep '7\.[0,1,2]' || {
-        echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 7.0|7.1|7.2" && return 2
+        echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 2
     };
     echo -e "\n${FUNCNAME[ 0 ]}($@) - changing system php version\n";
 
@@ -1314,6 +1314,7 @@ install_php_remi 5.6 && configure_php_remi 5.6
 install_php_remi 7.0 && configure_php_remi 7.0
 install_php_remi 7.1 && configure_php_remi 7.1
 install_php_remi 7.2 && configure_php_remi 7.2
+install_php_remi 7.3 && configure_php_remi 7.3
 switch_php 7.2
 # install switch_php for root - take current function from this script and export to file
 declare -f switch_php > /usr/sbin/switch_php.sh && echo "source /usr/sbin/switch_php.sh" >> /root/.bash_profile
