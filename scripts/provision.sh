@@ -89,7 +89,7 @@ install_git2() {
     echo -e "\n${FUNCNAME[ 0 ]}()\n"
     # http://tecadmin.net/install-git-2-0-on-centos-rhel-fedora/
     sudo su - <<'EOF'
-        git --version 2> /dev/null | grep '2.9' || \
+        git --version 2> /dev/null | grep '2.19' || \
         (
 	v=2.19.1
         yum remove -y git && \
