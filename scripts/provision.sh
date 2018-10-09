@@ -166,12 +166,15 @@ VHOSTS_EOF
 # Add index.php to the list of files that will be served as directory indexes.
 DirectoryIndex /index.php index.php
 
-<FilesMatch \.php$>
-    # 2.4.10+ can proxy to unix socket
-    # SetHandler "proxy:unix:/var/run/php-fpm.sock|fcgi://localhost/"
+# Proxy declaration
+<Proxy "unix:/var/run/php-fpm/php72-fpm.sock|fcgi://php-fpm">
+    # we must declare a parameter in here (doesn't matter which) or it'll not register the proxy ahead of time
+    ProxySet disablereuse=off
+</Proxy>
 
-    # Else we can just use a tcp socket:
-    SetHandler "proxy:fcgi://127.0.0.1:9000"
+# Redirect to the proxy
+<FilesMatch \.php$>
+    SetHandler proxy:fcgi://php-fpm
 </FilesMatch>
 
 <IfModule mpm_prefork_module>
