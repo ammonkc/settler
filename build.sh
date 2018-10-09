@@ -16,6 +16,7 @@ packer_vars=" -var name=homestead-co7 -var memory=2048 -var disk_size=105000 -va
 
 rm -f scripts/homestead.sh &> /dev/null
 cp -rf scripts/provision.sh bento/centos/scripts/homestead.sh
+cp -rf scripts/prep.sh bento/centos/scripts/prep.sh
 
 pushd bento/centos
 # Add `scripts/homestead.sh` to `provisioners.scripts` after `"scripts/hyperv.sh",` in file `centos/centos-7.5-x86_64.json`
@@ -23,6 +24,10 @@ grep 'homestead.sh' centos-7.5-x86_64.json &> /dev/null || (
     lineno=$(grep -n '"scripts/cleanup.sh"' centos-7.5-x86_64.json | cut -d: -f1) && \
     echo "Attempting insert of homestead settler script at ${lineno}" && \
     ex -sc "${lineno}i|\"scripts/homestead.sh\"," -cx centos-7.5-x86_64.json )
+grep 'prep.sh' centos-7.5-x86_64.json &> /dev/null || (
+    lineno=$(grep -n '"scripts/networking.sh"' centos-7.5-x86_64.json | cut -d: -f1) && \
+    echo "Attempting insert of prep settler script at ${lineno}" && \
+    ex -sc "${lineno}i|\"scripts/prep.sh\"," -cx centos-7.5-x86_64.json )
 
 # Ensure simple partitioning
 lineno=$(grep -n '^autopart' http/7/ks.cfg | cut -d: -f1)
