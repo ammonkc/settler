@@ -30,7 +30,7 @@ yum_install() {
     echo -e "\n${FUNCNAME[ 0 ]}()\n"
     sudo su - <<'YUM'
     yum -y install autoconf make automake sendmail sendmail-cf m4 virt-what \
-        vim mlocate curl htop wget dos2unix tree \
+        vim mlocate curl htop wget dos2unix tree bc \
         ntp nmap nc whois libnotify inotify-tools telnet ngrep bind-utils traceroute \
         cyrus-sasl-plain supervisor mailx mutt netcat \
         bash-completion-extras mcrypt vim cifs-utils zsh re2c pv \
@@ -91,7 +91,7 @@ install_git2() {
     sudo su - <<'EOF'
         git --version 2> /dev/null | grep '2.9' || \
         (
-	v=2.9.5
+	v=2.19.1
         yum remove -y git && \
         yum install -y perl-Tk-devel curl-devel expat-devel openssl-devel zlib-devel && \
         pushd /usr/src && \
