@@ -1310,6 +1310,7 @@ install_node
 install_nginx
 install_apache
 
+install_php_remi 5.6 && configure_php_remi 5.6
 install_php_remi 7.0 && configure_php_remi 7.0
 install_php_remi 7.1 && configure_php_remi 7.1
 install_php_remi 7.2 && configure_php_remi 7.2
