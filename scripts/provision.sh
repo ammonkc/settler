@@ -549,7 +549,7 @@ install_php_remi() {
         php${PHP_VERSION}-php-ldap \
         php${PHP_VERSION}-php-pear
 
-    echo $PHP_VERSION | egrep '56' || {
+    echo $1 | egrep '5\.[6]' || {
         sudo yum --enablerepo=remi-php${PHP_VERSION} install -y php${PHP_VERSION}-php-mcrypt
     };
 
