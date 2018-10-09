@@ -167,7 +167,7 @@ VHOSTS_EOF
 DirectoryIndex /index.php index.php
 
 # Proxy declaration
-<Proxy "unix:/var/run/php-fpm/php72-fpm.sock|fcgi://php-fpm">
+<Proxy "unix:/var/run/php/php72-fpm.sock|fcgi://php-fpm">
     # we must declare a parameter in here (doesn't matter which) or it'll not register the proxy ahead of time
     ProxySet disablereuse=off
 </Proxy>
