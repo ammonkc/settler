@@ -494,7 +494,7 @@ install_php_remi() {
     [ $# -lt 1 ] && {
         echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 1
     };
-    echo $1 | egrep '7\.[0,1,2]' || {
+    echo $1 | egrep '7\.[0,1,2,3]|5\.[6]' || {
         echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 2
     };
     echo -e "\n${FUNCNAME[ 0 ]}($@)\n";
@@ -563,7 +563,7 @@ configure_php_remi() {
     [ $# -lt 1 ] && {
         echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 1
     };
-    echo $1 | egrep '7\.[0,1,2]' || {
+    echo $1 | egrep '7\.[0,1,2,3]|5\.[6]' || {
         echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 2
     };
     echo -e "\n${FUNCNAME[ 0 ]}($@) - configure nginx php-fpm\n";
@@ -707,7 +707,7 @@ switch_php ()
     [ $# -lt 1 ] && {
         echo -e "missing argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 1
     };
-    echo $1 | egrep '7\.[0,1,2]' || {
+    echo $1 | egrep '7\.[0,1,2,3]|5\.[6]' || {
         echo -e "invalid argument\nusage: ${FUNCNAME[ 0 ]} 5.6|7.0|7.1|7.2|7.3" && return 2
     };
     echo -e "\n${FUNCNAME[ 0 ]}($@) - changing system php version\n";
