@@ -940,7 +940,9 @@ WPCLI
 
 install_dotfiles() {
     echo -e "\n${FUNCNAME[ 0 ]}()\n"
+    sudo su vagrant << DOTFILES
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ammonkc/dotfiles/linux/bootstrap.sh)"
+DOTFILES
 }
 
 install_oh_my_zsh() {
