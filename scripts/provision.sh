@@ -948,6 +948,10 @@ install_dotfiles() {
     export PATH=$PATH:/usr/local/git/bin
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ammonkc/dotfiles/linux/bootstrap.sh)"
 DOTFILES
+
+    sudo su - << CHSHELL
+    chsh -s /bin/zsh
+CHSHELL
 }
 
 install_oh_my_zsh() {
@@ -1351,7 +1355,6 @@ install_mailhog
 install_ngrok
 install_flyway
 install_wp_cli
-install_dotfiles
 # install_oh_my_zsh
 install_browsershot_dependencies
 install_zend_zray # not compatible with centos7 - libssl clash
@@ -1362,6 +1365,7 @@ install_crystal
 install_heroku_tooling
 install_lucky
 install_dnsmasq
+install_dotfiles
 
 install_motd
 
