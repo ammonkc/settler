@@ -670,6 +670,7 @@ EOF
 
     # As Homestead is based on Ubuntu we need to fix differences between CentOS and Ubuntu.
     fpm_pool_www="/etc/opt/remi/php${PHP_VERSION}/php-fpm.d/www.conf"
+    fpm_sock="/var/opt/remi/php${PHP_VERSION}/run/php-fpm/php${PHP_VERSION}-fpm.sock"
     sudo su - << NGINXDIFF
 
     rm -rf /etc/nginx/{default.d,sites-enabled}
@@ -677,6 +678,7 @@ EOF
 
     sed -i "s/user = apache/user = vagrant/" $fpm_pool_www
     sed -i "s/group = apache/group = vagrant/" $fpm_pool_www
+    sed -i "s|listen = 127.0.0.1:9000|listen = ${fpm_sock}|g" $fpm_pool_www
 
     grep 'listen.owner = vagrant' $fpm_pool_www || echo "listen.owner = vagrant" >> $fpm_pool_www
     grep 'listen.group = vagrant' $fpm_pool_www || echo "listen.group = vagrant" >> $fpm_pool_www
