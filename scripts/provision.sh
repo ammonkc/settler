@@ -1254,7 +1254,7 @@ install_motd() {
                                  |_|    |___/
 
     ################################################
-    Vagrant Box.......: ammonkc/entropy (v@@PACKER_BOX_VERSION@@)
+    Vagrant Box.......: ammonkc/homestead (v@@PACKER_BOX_VERSION@@)
     hostname..........: `hostname`
     IP Address........: `/usr/sbin/ip addr show eth1 | grep 'inet ' | cut -f2 | awk '{print $2}'`
     OS Release........: `cat /etc/redhat-release`
