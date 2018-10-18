@@ -947,8 +947,11 @@ install_dotfiles() {
     su vagrant << 'DOTFILES'
     export PATH=$PATH:/usr/local/git/bin
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ammonkc/dotfiles/linux/bootstrap.sh)"
-    chsh -s /bin/zsh
 DOTFILES
+
+    sudo su - << CHSHELL
+    chsh -s /bin/zsh vagrant
+CHSHELL
 }
 
 install_oh_my_zsh() {
