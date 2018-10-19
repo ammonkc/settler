@@ -1269,10 +1269,16 @@ install_motd() {
     kernel............: `uname -r`
     User..............: `whoami`
     Apache............: `/usr/sbin/httpd -v | grep 'Server version' | awk '{print $3}' | tr -d Apache/`
+    Nginx.............: `echo -e "$(/usr/sbin/nginx -v 2>&1)" | grep -o '[0-9.]*$'`
     PHP...............: `/usr/bin/php -v | grep cli | awk '{print $2}'`
     MySQL.............: `/usr/bin/mysql -V | awk '{print $5}' | tr -d ,`
     PostgreSQL........: `/usr/bin/psql --version | awk '{print $3}'`
-    Wkhtmltopdf.......: `/usr/local/bin/wkhtmltopdf --version | awk '{print $2}'`
+    Redis.............: `/usr/bin/redis-server --version | awk '{print $3}' | grep -o '[0-9.]*$'`
+    Node..............: `/usr/bin/node --version | grep -o '[0-9.]*$'`
+    Go................: `/usr/local/go/bin/go version | awk '{print $3}' | grep -o '[0-9.]*$'`
+    Git...............: `/usr/local/git/bin/git --version | awk '{print $3}'`
+    Composer..........: `/usr/local/bin/composer --version | awk '{print $3}'`
+    WP-CLI............: `/usr/local/bin/wp --version --allow-root | awk '{print $2}'`
     Configured Sites..:
     `cat /etc/hosts.dnsmasq`
     ################################################
@@ -1372,9 +1378,9 @@ install_postfix
 install_crystal
 install_heroku_tooling
 install_lucky
+
 install_dnsmasq
 install_dotfiles
-
 install_motd
 
 finish_build_meta ${PACKER_BOX_VERSION}
