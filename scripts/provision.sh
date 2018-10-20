@@ -1276,9 +1276,13 @@ install_motd() {
     Redis.............: `/usr/bin/redis-server --version | awk '{print $3}' | grep -o '[0-9.]*$'`
     Node..............: `/usr/bin/node --version | grep -o '[0-9.]*$'`
     Go................: `/usr/local/go/bin/go version | awk '{print $3}' | grep -o '[0-9.]*$'`
+    Dnsmasq...........: `/usr/sbin/dnsmasq --version | grep "Dnsmasq version" | awk '{print $3}'`
+    Supervisor........: `/usr/bin/supervisord --version`
+    Beanstalk.........: `/usr/bin/beanstalkd -v | grep -o '[0-9.]*$'`
     Git...............: `/usr/local/git/bin/git --version | awk '{print $3}'`
     Composer..........: `/usr/local/bin/composer --version | awk '{print $3}'`
     WP-CLI............: `/usr/local/bin/wp --version --allow-root | awk '{print $2}'`
+    Ngrok.............: `/usr/local/bin/ngrok --version | awk '{print $3}'`
     Configured Sites..:
     `cat /etc/hosts.dnsmasq`
     ################################################
