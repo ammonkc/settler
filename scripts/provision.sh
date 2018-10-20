@@ -901,7 +901,7 @@ install_blackfire() {
 install_mailhog() {
     echo -e "\n${FUNCNAME[ 0 ]}()\n"
     sudo su - << MAILHOG
-    wget --quiet -O /usr/local/bin/mailhog https://github.com/mailhog/MailHog/releases/download/v0.2.1/MailHog_linux_amd64
+    wget --quiet -O /usr/local/bin/mailhog https://github.com/mailhog/MailHog/releases/download/v1.0.0/MailHog_linux_amd64
     chmod +x /usr/local/bin/mailhog
     tee /etc/systemd/system/mailhog.service <<EOL
 [Unit]
@@ -1214,7 +1214,7 @@ install_dnsmasq() {
 
     sed -i 's|#conf-dir=/etc/dnsmasq.d|conf-dir=/etc/dnsmasq.d|' /etc/dnsmasq.conf
 
-    cat << DNSMASQ_EOF > /etc/dnsmasq.d/entropy.conf
+    cat << DNSMASQ_EOF > /etc/dnsmasq.d/homestead.conf
     domain-needed
     bogus-priv
     # listen on both local machine and private network
@@ -1231,7 +1231,7 @@ DNSMASQ_EOF
     local=/test/
 DOMAIN_EOF
 
-    echo -e "192.168.10.10 entropy.test" > /etc/hosts.dnsmasq
+    echo -e "192.168.10.10 homestead.test" > /etc/hosts.dnsmasq
 
     systemctl enable dnsmasq.service
     systemctl start dnsmasq.service
