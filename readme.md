@@ -2,6 +2,8 @@
 
 The scripts that builds a Laravel Homestead development environment using `CentOS`.
 
+End result can be found at https://app.vagrantup.com/ammonkc/boxes/homestead
+
 See [release.md](release.md) for build details.
 
 ## Usage
