@@ -161,6 +161,18 @@ install_apache() {
     IncludeOptional sites-enabled/*.conf
 VHOSTS_EOF
 
+cat << CACHE_EOF > /etc/httpd/conf.d/cache.conf
+<filesMatch "\.(html|htm|js|css)$">
+  FileETag None
+  <ifModule mod_headers.c>
+     Header unset ETag
+     Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+     Header set Pragma "no-cache"
+     Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+  </ifModule>
+</filesMatch>
+CACHE_EOF
+
     # php-fpm.conf
     cat << PHPFPM_EOF > /etc/httpd/conf.d/php-fpm.conf
 # Add index.php to the list of files that will be served as directory indexes.
