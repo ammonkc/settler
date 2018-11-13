@@ -34,7 +34,7 @@ yum_install() {
         ntp nmap nc whois libnotify inotify-tools telnet ngrep bind-utils traceroute \
         cyrus-sasl-plain supervisor mailx mutt netcat \
         bash-completion-extras mcrypt vim cifs-utils zsh re2c pv \
-        jq httpie mod_ssl httpd ntpdate poppler-utils
+        jq httpie mod_ssl httpd ntpdate poppler-utils ghostscript ImageMagick
 
     # Fix small file cache issue on vagrant mounts - http://stackoverflow.com/questions/6298933/shared-folder-in-virtualbox-for-apache
     sed -i 's/^EnableSendfile on/EnableSendfile off/'  /etc/httpd/conf/httpd.conf
