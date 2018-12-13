@@ -19,15 +19,15 @@ cp -rf scripts/provision.sh bento/centos/scripts/homestead.sh
 cp -rf scripts/prep.sh bento/centos/scripts/prep.sh
 
 pushd bento/centos
-# Add `scripts/homestead.sh` to `provisioners.scripts` after `"scripts/hyperv.sh",` in file `centos/centos-7.5-x86_64.json`
-grep 'homestead.sh' centos-7.5-x86_64.json &> /dev/null || (
-    lineno=$(grep -n '"scripts/cleanup.sh"' centos-7.5-x86_64.json | cut -d: -f1) && \
+# Add `scripts/homestead.sh` to `provisioners.scripts` after `"scripts/hyperv.sh",` in file `centos/centos-7.6-x86_64.json`
+grep 'homestead.sh' centos-7.6-x86_64.json &> /dev/null || (
+    lineno=$(grep -n '"scripts/cleanup.sh"' centos-7.6-x86_64.json | cut -d: -f1) && \
     echo "Attempting insert of homestead settler script at ${lineno}" && \
-    ex -sc "${lineno}i|\"scripts/homestead.sh\"," -cx centos-7.5-x86_64.json )
-grep 'prep.sh' centos-7.5-x86_64.json &> /dev/null || (
-    lineno=$(grep -n '"scripts/networking.sh"' centos-7.5-x86_64.json | cut -d: -f1) && \
+    ex -sc "${lineno}i|\"scripts/homestead.sh\"," -cx centos-7.6-x86_64.json )
+grep 'prep.sh' centos-7.6-x86_64.json &> /dev/null || (
+    lineno=$(grep -n '"scripts/networking.sh"' centos-7.6-x86_64.json | cut -d: -f1) && \
     echo "Attempting insert of prep settler script at ${lineno}" && \
-    ex -sc "${lineno}i|\"scripts/prep.sh\"," -cx centos-7.5-x86_64.json )
+    ex -sc "${lineno}i|\"scripts/prep.sh\"," -cx centos-7.6-x86_64.json )
 
 # Ensure simple partitioning
 lineno=$(grep -n '^autopart' http/7/ks.cfg | cut -d: -f1)
@@ -51,10 +51,10 @@ grep 'PACKER_BOX_VERSION=' scripts/homestead.sh &> /dev/null || (
     ex -sc "${lineno}i|PACKER_BOX_VERSION=${PACKER_BOX_VERSION=}" -cx scripts/homestead.sh )
 
 
-echo packer build ${packer_options} ${packer_vars} -var-file=../../entropy-7.5.json centos-7.5-x86_64.json
+echo packer build ${packer_options} ${packer_vars} -var-file=../../entropy-7.6.json centos-7.6-x86_64.json
 
-packer validate ${packer_vars} -var-file=../../entropy-7.5.json centos-7.5-x86_64.json &&
-packer build ${packer_options} ${packer_vars} -var-file=../../entropy-7.5.json centos-7.5-x86_64.json
+packer validate ${packer_vars} -var-file=../../entropy-7.6.json centos-7.6-x86_64.json &&
+packer build ${packer_options} ${packer_vars} -var-file=../../entropy-7.6.json centos-7.6-x86_64.json
 [ -e packer_cache/*.iso ] && (ln packer_cache/*.iso ../../;echo "ISO linked to save re-download")
 popd
 
