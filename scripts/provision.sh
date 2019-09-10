@@ -565,6 +565,7 @@ install_php_remi() {
         php${PHP_VERSION}-php-pecl-jsond-devel \
         php${PHP_VERSION}-php-pecl-xdebug \
         php${PHP_VERSION}-php-pecl-stomp \
+        php${PHP_VERSION}-php-pecl-redis \
         php${PHP_VERSION}-php-bcmath \
         php${PHP_VERSION}-php-mysqlnd \
         php${PHP_VERSION}-php-pgsql \
